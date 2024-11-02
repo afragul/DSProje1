@@ -6,6 +6,89 @@ namespace Name
 {
     internal class Program
     {
+        public static double Dijkstra(int baslangic, int hedef, double[][] mesafeJaggedArray)
+        {
+            int sehirSayisi = 81;
+            double[] mesafeler = new double[sehirSayisi];
+            bool[] ziyaretEdildi = new bool[sehirSayisi];
+
+            // Başlangıçtaki tüm mesafeleri sonsuz olarak ayarla.
+            for (int i = 0; i < sehirSayisi; i++)
+                mesafeler[i] = double.PositiveInfinity;
+
+            // Başlangıç şehrinden başla
+            mesafeler[baslangic] = 0;
+
+            while (true)
+            {
+                int enKucukMesafeIndeksi = -1;
+                double enKucukMesafe = double.PositiveInfinity;
+
+                // Henüz ziyaret edilmemiş ve en küçük mesafeye sahip şehri bul
+                for (int i = 0; i < sehirSayisi; i++)
+                {
+                    if (!ziyaretEdildi[i] && mesafeler[i] < enKucukMesafe)
+                    {
+                        enKucukMesafe = mesafeler[i];
+                        enKucukMesafeIndeksi = i;
+                    }
+                }
+
+                // Eğer ulaşılamaz veya ziyaret edilecek başka şehir yoksa
+                if (enKucukMesafeIndeksi == -1 || enKucukMesafeIndeksi == hedef)
+                    break;
+
+                // Şehri ziyaret edilmiş olarak işaretle
+                ziyaretEdildi[enKucukMesafeIndeksi] = true;
+
+                // Komşu şehirleri kontrol et ve mesafeleri güncelle
+                for (int j = 0; j < sehirSayisi; j++)
+                {
+                    if (!ziyaretEdildi[j] && mesafeJaggedArray[enKucukMesafeIndeksi][j] != double.PositiveInfinity)
+                    {
+                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + mesafeJaggedArray[enKucukMesafeIndeksi][j];
+                        if (yeniMesafe < mesafeler[j])
+                        {
+                            mesafeler[j] = yeniMesafe;
+                        }
+                    }
+                }
+            }
+            return mesafeler[hedef] ; 
+        }
+
+        public static List<Tuple<int,int,double>> MesafeHesaplama(double[][] orjinalJagged,double[][] mesafeJagged,string[] sehirler){
+
+            var farkListesi=new List<Tuple<int, int, double>>();
+            var hesaplananCiftler = new HashSet<(int, int)>();
+
+            for (int i=0;i<81;i++){
+                for (int j = 0; j < 81; j++)
+                {
+                    if (mesafeJagged[i][j]==Double.PositiveInfinity && i!=j)
+                    {
+                        var sehirCifti = (Math.Min(i, j), Math.Max(i, j));
+
+                        // Eğer çift daha önce işlendiyse gecsin
+                        if (hesaplananCiftler.Contains(sehirCifti))
+                            continue;
+
+                        hesaplananCiftler.Add(sehirCifti);
+
+                        double hesaplananMesafe=Dijkstra(i,j,mesafeJagged); //dijkstra algosuna esit olacak
+                        double orjinalMesafe=orjinalJagged[i][j];
+                        double fark=hesaplananMesafe-orjinalMesafe;
+
+                        farkListesi.Add(new Tuple<int, int, double>(i,j,fark));
+                        Console.WriteLine(sehirler[i+1] +" ile "+ sehirler[j+1] +" arasındaki karayolları cetvelindeki uzaklık değeri: " + orjinalMesafe + "\n" 
+                        +"Dijkstra algoritması ile hesaplanan değer: " + hesaplananMesafe + "\n" 
+                        +"Iki hesap arasındaki mesafe farkı : " + fark);
+                    }
+                }
+            }
+
+            return farkListesi;
+        }
         public static string[] MesafeArrayFonk()
         { 
             string projeDizini = Directory.GetCurrentDirectory();
@@ -120,42 +203,52 @@ namespace Name
         static void Main(string[] args)
         {
             string[] sehirler = {
-                "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya",
+                " " , "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya",
                 "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik",
                 "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale",
-                "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne",
+                "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne",
                 "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun",
-                "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul",
-                "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu",
-                "Kayseri", "Kırıkkale", "Kırklareli", "Kırşehir", "Konya", "Kütahya",
-                "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Nevşehir",
-                "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun",
+                "Gümüşhane", "Hakkari", "Hatay", "Isparta", "Mersin", "İstanbul",
+                "İzmir", "Kars", "Kastamonu",
+                "Kayseri", "Kırklareli", "Kırşehir", "Kocaeli" ,"Konya", "Kütahya",
+                "Malatya", "Manisa", "Kahramanmaraş" ,"Mardin", "Muğla", "Muş" ,"Nevşehir",
+                "Niğde", "Ordu" , "Rize", "Sakarya", "Samsun",
                 "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon",
-                "Tunceli", "Şanlıurfa", "Şırnak", "Uşak", "Van", "Yozgat", "Zonguldak"
+                "Tunceli", "Şanlıurfa" , "Uşak", "Van", "Yozgat", "Zonguldak" ,
+                "Aksaray" , "Bayburt" , "Karaman" , "Kırıkkale" , "Batman" , 
+                "Şırnak" , "Bartın" , "Ardahan" , "Iğdır" , "Yalova" , "Karabük" ,
+                "Kilis" , "Osmaniye" , "Düzce"
             };
             
             String[] mesafe = MesafeArrayFonk();
-            double[][] mesafeJaggedArray = new double[81][];
+            double[][] mesafeJaggedArray = new double[81][]; //sonsuz degeler olacak
+            double[][] orjinalJaggedArray = new double[81][]; //cetveldeki versiyonlar kalacak 
 
             for (int i = 0; i < 81; ++i)
             {
                 mesafeJaggedArray[i] = new double[81];
-                for (int j = 0; j < 81 - i; j++)
+                orjinalJaggedArray[i] = new double[81];
+                for (int j = 0; j < 81; j++)
                 {
-                    mesafeJaggedArray[i][j] = int.Parse(mesafe[i * 81 + j]);
+                    mesafeJaggedArray[i][j] = double.Parse(mesafe[i * 81 + j]);
+                    orjinalJaggedArray[i][j] = int.Parse(mesafe[i * 81 + j]);
+
                 }
             }
 
             //madde a 
             Random random = new Random();
-            int sehir1 = random.Next(1,82);
-            int sehir2 = random.Next(1,82);
-            while (sehir1 == sehir2)
+            for (int i = 0; i < 10; i++)
             {
-                sehir2 = random.Next(82);
+                int sehir1 = random.Next(1,82);
+                int sehir2 = random.Next(1,82);
+                while (sehir1 == sehir2)
+                {
+                    sehir2 = random.Next(82);
+                }
+                Console.WriteLine(sehirler[sehir1] + " (plaka: " + sehir1 +") - "+ sehirler[sehir2] + " (plaka: "+ sehir2 + ") uzaklık: " + mesafeJaggedArray[sehir1 - 1][sehir2-1] );
+
             }
-            Console.WriteLine(sehirler[sehir1] + " (plaka: " + sehir1 +") - "+ sehirler[sehir2] + " (plaka: "+ sehir2 + ") uzaklık: " + mesafeJaggedArray[sehir1 - 1][sehir2-1] );
-            Console.ReadKey();
 
             //madde b
             List<int>[] komsuIller=KomsuIllerFonk(); //komsuilleri cagir
@@ -165,7 +258,6 @@ namespace Name
             {
                 for (int j = 0; j < mesafeJaggedArray[i].Length; j++)
                 {
-                    // Eğer j, i'nin komşusu değilse sonsuz yap
                     if (i != j && !komsuIller[i].Contains(j))
                     {
                         mesafeJaggedArray[i][j] = Double.PositiveInfinity;
@@ -173,17 +265,24 @@ namespace Name
                 }
             }
 
-            // Sonuçları yazdırma
-            Console.WriteLine("Mesafe Matrisi:");
-            for (int i = 0; i < sehirler.Length; i++)
+            // //madde c 
+            var farkListesi= MesafeHesaplama(orjinalJaggedArray,mesafeJaggedArray,sehirler);
+            double minValue = farkListesi.Min(item => item.Item3);
+            double maxValue = farkListesi.Max(item => item.Item3);
+            var minItems = farkListesi.Where(item => item.Item3 == minValue).ToList();
+            var maxItems = farkListesi.Where(item => item.Item3 == maxValue).ToList();
+
+            Console.WriteLine("\nEn kısa mesafe farkına sahip şehirler: ");
+            foreach (var item in minItems)
             {
-                for (int j = 0; j < mesafeJaggedArray[i].Length; j++)
-                {
-                    Console.Write($"{mesafeJaggedArray[i][j]:0.##}\t");
-                }
-                Console.WriteLine();
+                Console.WriteLine($"({sehirler[item.Item1]}, {sehirler[item.Item2]}, {item.Item3})");
             }
 
+            Console.WriteLine("\nEn fazla mesafe farkına sahip şehirler: ");
+            foreach (var item in maxItems)
+            {
+                Console.WriteLine($"({sehirler[item.Item1]}, {sehirler[item.Item2]}, {item.Item3})");
+            }
         }
     }
 }

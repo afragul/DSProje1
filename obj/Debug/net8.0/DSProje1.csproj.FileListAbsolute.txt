@@ -12,3 +12,4 @@
 /Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.pdb
 /Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.genruntimeconfig.cache
 /Users/afragultig/DSProje1/obj/Debug/net8.0/ref/DSProje1.dll
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.sourcelink.json
