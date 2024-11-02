@@ -1,0 +1,14 @@
+/Users/afragultig/DSProje1/bin/Debug/net8.0/DSProje1
+/Users/afragultig/DSProje1/bin/Debug/net8.0/DSProje1.deps.json
+/Users/afragultig/DSProje1/bin/Debug/net8.0/DSProje1.runtimeconfig.json
+/Users/afragultig/DSProje1/bin/Debug/net8.0/DSProje1.dll
+/Users/afragultig/DSProje1/bin/Debug/net8.0/DSProje1.pdb
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.GeneratedMSBuildEditorConfig.editorconfig
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.AssemblyInfoInputs.cache
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.AssemblyInfo.cs
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.csproj.CoreCompileInputs.cache
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.dll
+/Users/afragultig/DSProje1/obj/Debug/net8.0/refint/DSProje1.dll
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.pdb
+/Users/afragultig/DSProje1/obj/Debug/net8.0/DSProje1.genruntimeconfig.cache
+/Users/afragultig/DSProje1/obj/Debug/net8.0/ref/DSProje1.dll
