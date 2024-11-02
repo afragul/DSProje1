@@ -78,6 +78,12 @@ namespace Name
                         double hesaplananMesafe=Dijkstra(i,j,mesafeJagged); //dijkstra algosuna esit olacak
                         double orjinalMesafe=orjinalJagged[i][j];
                         double fark=hesaplananMesafe-orjinalMesafe;
+                        if (fark<0)
+                        {
+                            double yeniFark=fark*(-1);
+                            fark=yeniFark;
+                            
+                        }
 
                         farkListesi.Add(new Tuple<int, int, double>(i,j,fark));
                         Console.WriteLine(sehirler[i+1] +" ile "+ sehirler[j+1] +" arasındaki karayolları cetvelindeki uzaklık değeri: " + orjinalMesafe + "\n" 
@@ -275,13 +281,13 @@ namespace Name
             Console.WriteLine("\nEn kısa mesafe farkına sahip şehirler: ");
             foreach (var item in minItems)
             {
-                Console.WriteLine($"({sehirler[item.Item1]}, {sehirler[item.Item2]}, {item.Item3})");
+                Console.WriteLine($"({sehirler[item.Item1+1]}, {sehirler[item.Item2+1]}, {item.Item3})");
             }
 
             Console.WriteLine("\nEn fazla mesafe farkına sahip şehirler: ");
             foreach (var item in maxItems)
             {
-                Console.WriteLine($"({sehirler[item.Item1]}, {sehirler[item.Item2]}, {item.Item3})");
+                Console.WriteLine($"({sehirler[item.Item1+1]}, {sehirler[item.Item2+1]}, {item.Item3})");
             }
         }
     }
