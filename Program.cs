@@ -115,7 +115,7 @@ namespace Name
             }
         }
 
-        public static string[] IlceMesafeArrayFonk()
+        public static string[] ilceMesafeArrayFonk()
         { 
             string projeDizini = Directory.GetCurrentDirectory();
             string dosyaAdi = "ilceler.txt";
@@ -314,20 +314,14 @@ namespace Name
 
             // //madde d
             String[] mesafe = ilceMesafeArrayFonk();
-            double[][] ilceMesafeMatris = new double[81][81]; //sonsuz degeler olacak
-            double[][] ilceOrjinalMatris = new double[81][81]; //cetveldeki versiyonlar kalacak 
-            for (int i = 0; i < 81; ++i)
+            double[,] ilceMesafeMatris = new double[30,30]; //sonsuz degeler olacak
+            double[,] ilceOrjinalMatris = new double[30,30]; //cetveldeki versiyonlar kalacak 
+            for (int i = 0; i < 30; ++i)
             {
-                int sayac = 0
-                for (int j = 0; j < 81; j++)
+                for (int j = 0; j <30; j++)
                 {
-                    if(i==j)
-                    {ilceMesafeMatris[i][j] = 0;
-                     ilceOrjinalMatris[i][j] = 0;
-                     sayac += 1;}
-                    else
-                    {mesafeJaggedArray[i][j] = double.Parse(mesafe[i * 30 + j-sayac]);
-                    orjinalJaggedArray[i][j] = int.Parse(mesafe[i * 30 + j-sayac]);}
+                    mesafeJaggedArray[i,j] = double.Parse(mesafe[i * 30 + j]);
+                    orjinalJaggedArray[i,j] = int.Parse(mesafe[i * 30 + j]);
 
                 }
             }
