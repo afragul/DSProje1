@@ -114,6 +114,28 @@ namespace Name
                 return Array.Empty<string>();
             }
         }
+
+        public static string[] IlceMesafeArrayFonk()
+        { 
+            string projeDizini = Directory.GetCurrentDirectory();
+            string dosyaAdi = "ilceler.txt";
+
+            string dosyaYolu = Path.Combine(projeDizini, dosyaAdi);
+
+            try
+            {
+                string file = File.ReadAllText(dosyaYolu);
+                string[] ilcemesafeArray = file.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                return ilcemesafeArray;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Dosya okunurken bir hata oluştu: " + e.Message);
+                return Array.Empty<string>();
+            }
+        }
+        
+        
         public static List<int>[] KomsuIllerFonk(){
 
             List<int>[] komsuIller = new List<int>[81];
@@ -288,6 +310,26 @@ namespace Name
             foreach (var item in maxItems)
             {
                 Console.WriteLine($"({sehirler[item.Item1+1]}, {sehirler[item.Item2+1]}, {item.Item3})");
+            }
+
+            // //madde d
+            String[] mesafe = ilceMesafeArrayFonk();
+            double[][] ilceMesafeMatris = new double[81][81]; //sonsuz degeler olacak
+            double[][] ilceOrjinalMatris = new double[81][81]; //cetveldeki versiyonlar kalacak 
+            for (int i = 0; i < 81; ++i)
+            {
+                int sayac = 0
+                for (int j = 0; j < 81; j++)
+                {
+                    if(i==j)
+                    {ilceMesafeMatris[i][j] = 0;
+                     ilceOrjinalMatris[i][j] = 0;
+                     sayac += 1;}
+                    else
+                    {mesafeJaggedArray[i][j] = double.Parse(mesafe[i * 30 + j-sayac]);
+                    orjinalJaggedArray[i][j] = int.Parse(mesafe[i * 30 + j-sayac]);}
+
+                }
             }
         }
     }
