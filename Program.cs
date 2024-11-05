@@ -95,6 +95,8 @@ namespace Name
 
             return farkListesi;
         }
+
+        
         public static string[] MesafeArrayFonk()
         { 
             string projeDizini = Directory.GetCurrentDirectory();
@@ -134,8 +136,47 @@ namespace Name
                 return Array.Empty<string>();
             }
         }
-        
-        
+        public static List<int>[] KomsuIlcelerFonk(){
+            
+            List<int>[] komsuIlceler = new List<int>[30];
+            for (int i = 0; i< komsuIlceler.Length;i++)
+            {
+                komsuIlceler[i] = new List<int>();
+            }
+            komsuIlceler[0].AddRange(new int[] { 22, 11, 4}); //Aliağanın komşuları
+            komsuIlceler[1].AddRange(new int[] { 20,23,13}); // Balçova'nın komşuları
+            komsuIlceler[2].AddRange(new int[] { 28, 24, 27, 17 }); // Bayındır'ın komşuları
+            komsuIlceler[3].AddRange(new int[] { 6, 16 }); // Bayraklı'ın komşuları
+            komsuIlceler[4].AddRange(new int[] { 0, 10, 18 }); // Bergama'ın komşuları
+            komsuIlceler[5].AddRange(new int[] { 19, 24, 27 }); // Beydağ'ın komşuları
+            komsuIlceler[6].AddRange(new int[] { 16, 20, 3, 17, 7 }); // Bornova'ın komşuları
+            komsuIlceler[7].AddRange(new int[] { 20, 6, 14 }); // Buca'ın komşuları
+            komsuIlceler[8].AddRange(new int[] { 29, 15}); // Çeşme'ın komşuları
+            komsuIlceler[9].AddRange(new int[] { 16, 22}); // Çiğli'ın komşuları
+            komsuIlceler[10].AddRange(new int[] { 4 }); // Dikili'ın komşuları
+            komsuIlceler[11].AddRange(new int[] {22, 0}); // Foça'ın komşuları
+            komsuIlceler[12].AddRange(new int[] { 14, 21); // Gaziemir'ın komşuları
+            komsuIlceler[13].AddRange(new int[] { 1 , 23, 29, 25 }); // Güzelbahçe'ın komşuları
+            komsuIlceler[14].AddRange(new int[] { 20, 7, 12, 21}); // Karabağlar'ın komşuları
+            komsuIlceler[15].AddRange(new int[] { 29, 8}); // Karaburun'ın komşuları
+            komsuIlceler[16].AddRange(new int[] {20, 9, 6, 3}); // Karşıyaka'ın komşuları
+            komsuIlceler[17].AddRange(new int[] { 6, 2, 28}); // Kemalpaşa'ın komşuları
+            komsuIlceler[18].AddRange(new int[] {4}); // Kınık'ın komşuları
+            komsuIlceler[19].AddRange(new int[] { 5, 24 }); // Kiraz'ın komşuları
+            komsuIlceler[20].AddRange(new int[] { 16, 6, 1, 7, 14 }); // Konak'ın komşuları
+            komsuIlceler[21].AddRange(new int[] { 12, 14, 25, 28, 26 }); // Menderes'ın komşuları
+            komsuIlceler[22].AddRange(new int[] { 9, 11, 0 }); // Menemen'ın komşuları
+            komsuIlceler[23].AddRange(new int[] { 1, 13 }); // Narlıdere'ın komşuları
+            komsuIlceler[24].AddRange(new int[] { 5, 19, 27, 2 }); // Ödemiş'ın komşuları
+            komsuIlceler[25].AddRange(new int[] { 13, 29, 21 }); // Seferihisar'ın komşuları
+            komsuIlceler[26].AddRange(new int[] { 21, 28 }); // Selçuk'ın komşuları
+            komsuIlceler[27].AddRange(new int[] { 2, 24, 5 }); // Tire'ın komşuları
+            komsuIlceler[28].AddRange(new int[] { 17, 21, 26, 2 }); // Torbalı'ın komşuları
+            komsuIlceler[29].AddRange(new int[] { 13, 15, 8, 15 }); // Urla'ın komşuları
+            return komsuIlceler;
+        }
+                                      
+            
         public static List<int>[] KomsuIllerFonk(){
 
             List<int>[] komsuIller = new List<int>[81];
@@ -313,6 +354,7 @@ namespace Name
             }
 
             // //madde d
+            String[] ilceler = {"Aliağa", "Balçova","Bayındır","Bayraklı","Bergama","Beydağ","Bornova","Buca","Çeşme","Çiğli","Dikili","Foça","Gaziemir","Güzelbahçe","Karabağlar","Karaburun","Karşıyaka","Kemalpaşa","Kınık","Kiraz","Konak","Menderes","Menemen","Narlıdere","Ödemiş","Seferihisar","Selçuk","Tire","Torbalı","Urla"}
             String[] mesafe = ilceMesafeArrayFonk();
             double[,] ilceMesafeMatris = new double[30,30]; //sonsuz degeler olacak
             double[,] ilceOrjinalMatris = new double[30,30]; //cetveldeki versiyonlar kalacak 
