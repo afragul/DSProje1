@@ -18,8 +18,9 @@ namespace proje11
             RastgeleSehirCifti();
             KomsuIllerDısındaSonsuzYap();
             EnKisaYazdir();
-
-
+            ilceMatris();
+            EnKisaYazdirIlce();
+            ilceKomsularSonsuz();
 
         }
 
@@ -41,9 +42,12 @@ namespace proje11
                 "Şırnak" , "Bartın" , "Ardahan" , "Iğdır" , "Yalova" , "Karabük" ,
                 "Kilis" , "Osmaniye" , "Düzce"
             };
+        static string[] ilceAdlari = { "Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla" };
         static double[][] ilMesafeMatrisi = new double[81][]; //cetveldeki veriler kalacak
         static double[][] ilMesafeMatrisiSonsuz = new double[81][]; //sonsuz değerler olarak
         static Dictionary<int, List<int>> komsuIller = new Dictionary<int, List<int>>();
+        static double[,] ilceMesafeMatris = new double[30, 30];
+        static double[,] ilceMesafeMatrisSonsuz = new double[30, 30];
 
         // madde a
         static void IlUzaklıkMatrisiOluşturma()
@@ -319,7 +323,205 @@ namespace proje11
 
 
 
+        }
+         
+        // madde d
+        public static void ilceMatris()
+        {
+            string projeDizini = Directory.GetCurrentDirectory();
+            string dosyaAdi = "ilceler.txt";
+            string dosyaYolu = Path.Combine(projeDizini, dosyaAdi);
+            string[] ilceMesafeArray;
+
+            try
+            {
+                string file = File.ReadAllText(dosyaYolu);
+                ilceMesafeArray = file.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Dosya okunurken bir hata oluştu: " + e.Message);
+                ilceMesafeArray = Array.Empty<string>();
+            }
+
+            for (int i = 0; i < 30; i++)
+            {
+
+                for (int j = 0; j < 30; j++)
+                {
+                    ilceMesafeMatris[i, j] = double.Parse(ilceMesafeArray[i * 30 + j]);
+                }
+            }
+
+        }
+
+        public static void ilceKomsularSonsuz()
+        {
+            Dictionary<int, List<int>> komsuIlceler = new Dictionary<int, List<int>>();
+            komsuIlceler = new Dictionary<int, List<int>>
+            {
+                { 1, new List<int> { 23,12,5} }, // Aliağa
+                { 2, new List<int> { 21,24,14 } }, //Balçova
+                { 3, new List<int> { 29,25,28,18 } }, //Bayındır
+                { 4, new List<int> { 7,17} }, //Bayraklı
+                { 5, new List<int> { 1, 11,19 } }, //Bergama
+                { 6, new List<int> { 20,25,28 } }, //Beydağ
+                { 7, new List<int> { 17,21,4,18,8 } }, //Bornova
+                { 8, new List<int> { 21, 7, 15 } }, //Buca
+                { 9, new List<int> { 30,16 } }, //Çeşme
+                { 10, new List<int> {17,23 } }, //Çiğli
+                { 11, new List<int> {5 } }, //Dikili
+                { 12, new List<int> {23,1 } }, //Foça
+                { 13, new List<int> {15,22} }, //Gaziemir
+                { 14, new List<int> {2,24,30,26} }, //Güzelbahçe
+                { 15, new List<int> { 21,8,13,22 } }, //Karabağlar
+                { 16, new List<int> { 30,9} }, //Karaburun
+                { 17, new List<int> { 21, 10, 7, 4 } }, //Karşıyaka
+                { 18, new List<int> { 7,3,29 } }, //Kemalpaşa
+                { 19, new List<int> { 5 } }, //Kınık
+                { 20, new List<int> {6,25} }, //Kiraz
+                { 21, new List<int> {17,7,2,8,15} }, //Konak
+                { 22, new List<int> { 13,15,26,29,27} }, //Menderes
+                { 23, new List<int> {10,12,1} }, //Menemen
+                { 24, new List<int> {2,14} }, //Narlıdere
+                { 25, new List<int> { 6,20,28,3} }, //Ödemiş
+                { 26, new List<int> { 14,30,22} }, //Seferihisar
+                { 27, new List<int> {22,29} }, //Selçuk
+                { 28, new List<int> {3,25,6} }, //Tire
+                { 29, new List<int> {18,22,27,3} }, //Torbalı
+                { 30, new List<int> { 14,16,9,26} }//Hakkari
+            };
+
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 0; j < 30; j++)
+                {
+                    if (i != j && (!komsuIlceler.ContainsKey(i + 1) || !komsuIlceler[i + 1].Contains(j + 1)))
+                    {
+                        ilceMesafeMatrisSonsuz[i, j] = Double.PositiveInfinity;
+                    }
+                }
+            }
+
+        }
+        public static double IlceDijkstra(int baslangic, int hedef, double[,] ilceMesafeMatrisSonsuz)
+        {
+            int ilceSayisi = 30;
+            double[] mesafeler = new double[ilceSayisi];
+            bool[] ziyaretEdildi = new bool[ilceSayisi];
+
+            // Başlangıçtaki tüm mesafeleri sonsuz olarak ayarla.
+            for (int i = 0; i < ilceSayisi; i++)
+                mesafeler[i] = double.PositiveInfinity;
+
+            // Başlangıç şehrinden başla
+            mesafeler[baslangic] = 0;
+
+            while (true)
+            {
+                int enKucukMesafeIndeksi = -1;
+                double enKucukMesafe = double.PositiveInfinity;
+
+                // Henüz ziyaret edilmemiş ve en küçük mesafeye sahip ilçeyi bul
+                for (int i = 0; i < ilceSayisi; i++)
+                {
+                    if (!ziyaretEdildi[i] && mesafeler[i] < enKucukMesafe)
+                    {
+                        enKucukMesafe = mesafeler[i];
+                        enKucukMesafeIndeksi = i;
+                    }
+                }
+
+                // Eğer ulaşılamaz veya ziyaret edilecek başka şehir yoksa
+                if (enKucukMesafeIndeksi == -1 || enKucukMesafeIndeksi == hedef)
+                    break;
+
+                // Şehri ziyaret edilmiş olarak işaretle
+                ziyaretEdildi[enKucukMesafeIndeksi] = true;
+
+                // Komşu şehirleri kontrol et ve mesafeleri güncelle
+                for (int j = 0; j < ilceSayisi; j++)
+                {
+                    if (!ziyaretEdildi[j] && ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi, j] != double.PositiveInfinity)
+                    {
+                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi,j];
+                        if (yeniMesafe < mesafeler[j])
+                        {
+                            mesafeler[j] = yeniMesafe;
+                        }
+                    }
+                }
+            }
+            return mesafeler[hedef];
+        }
+
+        public static List<Tuple<int, int, double>> MesafeHesaplamaIlce(double[,] orjinalMatris, double[,] Matris, string[] sehirAdlari)
+        {
+            ilceKomsularSonsuz();
+            var farkListesiIlce = new List<Tuple<int, int, double>>();
+            var hesaplananCiftler = new HashSet<(int, int)>();
+
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 0; j < 30; j++)
+                {
+                    if (ilceMesafeMatrisSonsuz[i,j] == Double.PositiveInfinity && i != j)
+                    {
+                        var ilceCifti = (Math.Min(i, j), Math.Max(i, j));
+
+                        if (hesaplananCiftler.Contains(ilceCifti))
+                            continue;
+
+                        hesaplananCiftler.Add(ilceCifti);
+
+                        double hesaplananMesafe = IlceDijkstra(i, j, ilceMesafeMatrisSonsuz); //dijkstra algosuna esit olacak
+                        double orjinalMesafe = ilceMesafeMatris[i,j];
+                        double fark = Math.Abs(hesaplananMesafe - orjinalMesafe);
+
+
+                        farkListesiIlce.Add(new Tuple<int, int, double>(i, j, fark));
+                        Console.WriteLine(ilceAdlari[i] + " ile " + ilceAdlari[j] + " arasındaki karayolları cetvelindeki uzaklık değeri: " + orjinalMesafe + "\n"
+                        + "Dijkstra algoritması ile hesaplanan değer: " + hesaplananMesafe + "\n"
+                        + "Iki hesap arasındaki mesafe farkı : " + fark);
+                    }
+                }
+            }
+
+            return farkListesiIlce;
+        }
+
+        public static void EnKisaYazdirIlce()
+        {
+            var farkListesiIlce = MesafeHesaplamaIlce(ilceMesafeMatris, ilceMesafeMatrisSonsuz, ilceAdlari);
+            if (!farkListesiIlce.Any())
+            {
+                Console.WriteLine("Fark listesi boş. İşlem yapılacak bir şehir çifti bulunamadı.");
+                Console.ReadKey();
+                return;
+            }
+            double minValue = farkListesiIlce.Min(item => item.Item3);
+            double maxValue = farkListesiIlce.Max(item => item.Item3);
+            var minItems = farkListesiIlce.Where(item => item.Item3 == minValue).ToList();
+            var maxItems = farkListesiIlce.Where(item => item.Item3 == maxValue).ToList();
+
+            Console.WriteLine("\nEn kısa mesafe farkına sahip ilçeler: ");
+            foreach (var item in minItems)
+            {
+                Console.WriteLine($"({ilceAdlari[item.Item1]}, {ilceAdlari[item.Item2]}, {item.Item3})");
+            }
+
+            Console.WriteLine("\nEn fazla mesafe farkına sahip ilçeler: ");
+            foreach (var item in maxItems)
+            {
+                Console.WriteLine($"({ilceAdlari[item.Item1]}, {ilceAdlari[item.Item2]}, {item.Item3})");
+
+            }
+            Console.ReadKey();
 
         }
     }
 }
+
+
+
