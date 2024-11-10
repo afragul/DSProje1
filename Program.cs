@@ -19,8 +19,9 @@ namespace proje11
             KomsuIllerDısındaSonsuzYap();
             EnKisaYazdir();
             ilceMatris();
-            EnKisaYazdirIlce();
             ilceKomsularSonsuz();
+            EnKisaYazdirIlce();
+            
 
         }
 
@@ -48,6 +49,7 @@ namespace proje11
         static Dictionary<int, List<int>> komsuIller = new Dictionary<int, List<int>>();
         static double[,] ilceMesafeMatris = new double[30, 30];
         static double[,] ilceMesafeMatrisSonsuz = new double[30, 30];
+        static Dictionary<int, List<int>> komsuIlceler = new Dictionary<int, List<int>>();
 
         // madde a
         static void IlUzaklıkMatrisiOluşturma()
@@ -261,6 +263,7 @@ namespace proje11
         public static List<Tuple<int, int, double>> MesafeHesaplama(double[][] orjinalJagged, double[][] mesafeJagged, string[] sehirAdlari)
         {
 
+            
             var farkListesi = new List<Tuple<int, int, double>>();
             var hesaplananCiftler = new HashSet<(int, int)>();
 
@@ -324,7 +327,7 @@ namespace proje11
 
 
         }
-         
+
         // madde d
         public static void ilceMatris()
         {
@@ -358,7 +361,7 @@ namespace proje11
 
         public static void ilceKomsularSonsuz()
         {
-            Dictionary<int, List<int>> komsuIlceler = new Dictionary<int, List<int>>();
+
             komsuIlceler = new Dictionary<int, List<int>>
             {
                 { 1, new List<int> { 23,12,5} }, // Aliağa
@@ -445,7 +448,7 @@ namespace proje11
                 {
                     if (!ziyaretEdildi[j] && ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi, j] != double.PositiveInfinity)
                     {
-                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi,j];
+                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi, j];
                         if (yeniMesafe < mesafeler[j])
                         {
                             mesafeler[j] = yeniMesafe;
@@ -456,28 +459,33 @@ namespace proje11
             return mesafeler[hedef];
         }
 
-        public static List<Tuple<int, int, double>> MesafeHesaplamaIlce(double[,] orjinalMatris, double[,] Matris, string[] sehirAdlari)
+        public static List<Tuple<int, int, double>> MesafeHesaplamaIlce(double[,] orjinalMatris, double[,] matris, string[] İlceAdlari)
         {
-            ilceKomsularSonsuz();
             var farkListesiIlce = new List<Tuple<int, int, double>>();
-            var hesaplananCiftler = new HashSet<(int, int)>();
+            var hesaplananCiftlerIlce = new HashSet<(int, int)>();
 
             for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 30; j++)
                 {
-                    if (ilceMesafeMatrisSonsuz[i,j] == Double.PositiveInfinity && i != j)
+                    if (matris[i, j] == Double.PositiveInfinity && i != j)
                     {
                         var ilceCifti = (Math.Min(i, j), Math.Max(i, j));
 
-                        if (hesaplananCiftler.Contains(ilceCifti))
+                        if (hesaplananCiftlerIlce.Contains(ilceCifti))
                             continue;
 
-                        hesaplananCiftler.Add(ilceCifti);
+                        hesaplananCiftlerIlce.Add(ilceCifti);
 
-                        double hesaplananMesafe = IlceDijkstra(i, j, ilceMesafeMatrisSonsuz); //dijkstra algosuna esit olacak
-                        double orjinalMesafe = ilceMesafeMatris[i,j];
-                        double fark = Math.Abs(hesaplananMesafe - orjinalMesafe);
+                        double hesaplananMesafe = IlceDijkstra(i, j, matris); //dijkstra algosuna esit olacak
+                        double orjinalMesafe = orjinalMatris[i, j];
+                        double fark = hesaplananMesafe - orjinalMesafe;
+                        if (fark < 0)
+                        {
+                            double yeniFark = fark * (-1);
+                            fark = yeniFark;
+
+                        }
 
 
                         farkListesiIlce.Add(new Tuple<int, int, double>(i, j, fark));
@@ -494,12 +502,6 @@ namespace proje11
         public static void EnKisaYazdirIlce()
         {
             var farkListesiIlce = MesafeHesaplamaIlce(ilceMesafeMatris, ilceMesafeMatrisSonsuz, ilceAdlari);
-            if (!farkListesiIlce.Any())
-            {
-                Console.WriteLine("Fark listesi boş. İşlem yapılacak bir şehir çifti bulunamadı.");
-                Console.ReadKey();
-                return;
-            }
             double minValue = farkListesiIlce.Min(item => item.Item3);
             double maxValue = farkListesiIlce.Max(item => item.Item3);
             var minItems = farkListesiIlce.Where(item => item.Item3 == minValue).ToList();
