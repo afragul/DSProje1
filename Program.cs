@@ -20,6 +20,7 @@ namespace proje11
             EnKisaYazdir();
             ilceMatris();
             ilceKomsularSonsuz();
+            
             EnKisaYazdirIlce();
             
 
@@ -80,7 +81,6 @@ namespace proje11
                 {
                     ilMesafeMatrisi[i][j] = double.Parse(mesafeArray[i * 81 + j]);
                     ilMesafeMatrisiSonsuz[i][j] = double.Parse(mesafeArray[i * 81 + j]);
-
                 }
             }
 
@@ -130,7 +130,7 @@ namespace proje11
                 { 18, new List<int> { 14, 06, 71, 66, 19, 37, 78 } }, //Çankırı
                 { 19, new List<int> { 37, 18, 66, 05, 55, 60 } }, //Çorum
                 { 20, new List<int> {09, 48, 15, 32, 03, 64, 45} }, //Denizli
-                { 21, new List<int> {23, 12, 49, 72, 47, 63, 02, 44} },
+                { 21, new List<int> {23, 12, 49, 72, 47, 63, 02, 44} }, //Diyarbakır
                 { 22, new List<int> { 59, 39, 17} }, //Edirne
                 { 23, new List<int> {44, 24, 62, 12, 21} }, //Elazığ
                 { 24, new List<int> {25, 62, 12, 23, 58, 29, 69} }, //Erzincan
@@ -150,7 +150,7 @@ namespace proje11
                 { 38, new List<int> { 58, 46, 01, 51, 50, 66} }, //Kayseri
                 { 39, new List<int> { 59, 22} }, //Kırklareli
                 { 40, new List<int> { 66, 50, 68, 06, 71} }, //Kırşehir
-                { 41, new List<int> { 66, 50, 68, 06, 71} }, //Kocaeli
+                { 41, new List<int> { 34, 54, 16, 77} }, //Kocaeli
                 { 42, new List<int> { 68, 06, 26, 03, 32, 07, 70, 51 } }, //Konya
                 { 43, new List<int> {45, 10, 16, 11, 26, 03, 64} }, //Kütahya
                 { 44, new List<int> { 23, 02, 46, 58, 24, 21} }, //Malatya
@@ -192,20 +192,24 @@ namespace proje11
                 { 80, new List<int>  {01, 31, 46, 27} }, //Osmaniye
                 { 81, new List<int>  { 67, 14, 54} }, //Düzce
                 
-
             };
+            int sayac = 0;
             for (int i = 0; i < 81; i++)
             {
                 for (int j = 0; j < 81; j++)
                 {
+                    
                     if (i != j && (!komsuIller.ContainsKey(i + 1) || !komsuIller[i + 1].Contains(j + 1)))
                     {
                         ilMesafeMatrisiSonsuz[i][j] = Double.PositiveInfinity;
+                        
+                        sayac++;
                     }
                 }
 
 
             }
+            Console.WriteLine(sayac);
         }
 
 
@@ -354,6 +358,7 @@ namespace proje11
                 for (int j = 0; j < 30; j++)
                 {
                     ilceMesafeMatris[i, j] = double.Parse(ilceMesafeArray[i * 30 + j]);
+                    ilceMesafeMatrisSonsuz[i,j] = double.Parse(ilceMesafeArray[i*30 + j]);
                 }
             }
 
@@ -364,48 +369,51 @@ namespace proje11
 
             komsuIlceler = new Dictionary<int, List<int>>
             {
-                { 1, new List<int> { 23,12,5} }, // Aliağa
-                { 2, new List<int> { 21,24,14 } }, //Balçova
+                { 1, new List<int> { 23,12,5 } }, // Aliağa
+                { 2, new List<int> { 21,24,15 } }, //Balçova
                 { 3, new List<int> { 29,25,28,18 } }, //Bayındır
-                { 4, new List<int> { 7,17} }, //Bayraklı
+                { 4, new List<int> { 7,17,21} }, //Bayraklı
                 { 5, new List<int> { 1, 11,19 } }, //Bergama
-                { 6, new List<int> { 20,25,28 } }, //Beydağ
-                { 7, new List<int> { 17,21,4,18,8 } }, //Bornova
-                { 8, new List<int> { 21, 7, 15 } }, //Buca
-                { 9, new List<int> { 30,16 } }, //Çeşme
+                { 6, new List<int> { 20,25 } }, //Beydağ
+                { 7, new List<int> { 17,21,4,18,8,23 } }, //Bornova
+                { 8, new List<int> { 21, 7, 15,13,22,29,18 } }, //Buca
+                { 9, new List<int> { 30 } }, //Çeşme
                 { 10, new List<int> {17,23 } }, //Çiğli
-                { 11, new List<int> {5 } }, //Dikili
+                { 11, new List<int> {5} }, //Dikili
                 { 12, new List<int> {23,1 } }, //Foça
-                { 13, new List<int> {15,22} }, //Gaziemir
-                { 14, new List<int> {2,24,30,26} }, //Güzelbahçe
-                { 15, new List<int> { 21,8,13,22 } }, //Karabağlar
-                { 16, new List<int> { 30,9} }, //Karaburun
-                { 17, new List<int> { 21, 10, 7, 4 } }, //Karşıyaka
-                { 18, new List<int> { 7,3,29 } }, //Kemalpaşa
+                { 13, new List<int> {15,22,8} }, //Gaziemir
+                { 14, new List<int> {24,30,26,15} }, //Güzelbahçe
+                { 15, new List<int> { 14,21,8,13,22,2,24 } }, //Karabağlar
+                { 16, new List<int> { 30} }, //Karaburun
+                { 17, new List<int> { 10, 7, 4, 23 } }, //Karşıyaka
+                { 18, new List<int> { 7,3,29,8 } }, //Kemalpaşa
                 { 19, new List<int> { 5 } }, //Kınık
                 { 20, new List<int> {6,25} }, //Kiraz
-                { 21, new List<int> {17,7,2,8,15} }, //Konak
-                { 22, new List<int> { 13,15,26,29,27} }, //Menderes
-                { 23, new List<int> {10,12,1} }, //Menemen
-                { 24, new List<int> {2,14} }, //Narlıdere
+                { 21, new List<int> {7,2,8,15,4} }, //Konak
+                { 22, new List<int> { 13,15,26,29,27,8} }, //Menderes
+                { 23, new List<int> {10,12,1,17,7} }, //Menemen
+                { 24, new List<int> {2,14,15} }, //Narlıdere
                 { 25, new List<int> { 6,20,28,3} }, //Ödemiş
                 { 26, new List<int> { 14,30,22} }, //Seferihisar
-                { 27, new List<int> {22,29} }, //Selçuk
-                { 28, new List<int> {3,25,6} }, //Tire
-                { 29, new List<int> {18,22,27,3} }, //Torbalı
-                { 30, new List<int> { 14,16,9,26} }//Hakkari
+                { 27, new List<int> {22,29,28} }, //Selçuk
+                { 28, new List<int> {3,25,29,30} }, //Tire
+                { 29, new List<int> {18,22,27,3,28,8} }, //Torbalı
+                { 30, new List<int> { 14,16,9,26} }//urla
             };
-
+           
             for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 30; j++)
                 {
                     if (i != j && (!komsuIlceler.ContainsKey(i + 1) || !komsuIlceler[i + 1].Contains(j + 1)))
                     {
+                        
                         ilceMesafeMatrisSonsuz[i, j] = Double.PositiveInfinity;
+                        
                     }
                 }
             }
+            
 
         }
         public static double IlceDijkstra(int baslangic, int hedef, double[,] ilceMesafeMatrisSonsuz)
@@ -524,6 +532,7 @@ namespace proje11
         }
     }
 }
+
 
 
 
