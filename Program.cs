@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,20 +15,19 @@ namespace proje11
 
         static void Main(string[] args)
         {
-            IlUzaklıkMatrisiOluşturma();
-            RastgeleSehirCifti();
-            KomsuIllerDısındaSonsuzYap();
-            EnKisaYazdir();
-            ilceMatris();
-            ilceKomsularSonsuz();
-            
-            EnKisaYazdirIlce();
+            MakeCityDistanceJagged();
+            RandomCityCouple();
+            CityInfinity();
+            PrintMinDifference();
+            CountyMatris();
+            countyInfinite();
+            MinDifCunty();
             
 
         }
 
 
-        static string[] sehirAdlari = {
+        static string[] cities = {
                 " " , "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya",
                 "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik",
                 "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale",
@@ -44,71 +44,71 @@ namespace proje11
                 "Şırnak" , "Bartın" , "Ardahan" , "Iğdır" , "Yalova" , "Karabük" ,
                 "Kilis" , "Osmaniye" , "Düzce"
             };
-        static string[] ilceAdlari = { "Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla" };
-        static double[][] ilMesafeMatrisi = new double[81][]; //cetveldeki veriler kalacak
-        static double[][] ilMesafeMatrisiSonsuz = new double[81][]; //sonsuz değerler olarak
-        static Dictionary<int, List<int>> komsuIller = new Dictionary<int, List<int>>();
-        static double[,] ilceMesafeMatris = new double[30, 30];
-        static double[,] ilceMesafeMatrisSonsuz = new double[30, 30];
-        static Dictionary<int, List<int>> komsuIlceler = new Dictionary<int, List<int>>();
+        static string[] countyNames = { "Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla" };
+        static double[][] cityOriginalDistanceJagged = new double[81][]; //cetveldeki veriler kalacak
+        static double[][] cityInfinityDistanceJagged = new double[81][]; //sonsuz değerler olarak
+        static Dictionary<int, List<int>> neighborCities = new Dictionary<int, List<int>>();
+        static double[,] countyOriginalDistance = new double[30, 30];
+        static double[,] countyInfinityDistance = new double[30, 30];
+        static Dictionary<int, List<int>> neighborCountries = new Dictionary<int, List<int>>();
 
         // madde a
-        static void IlUzaklıkMatrisiOluşturma()
+        static void MakeCityDistanceJagged()
         {
 
-            string projeDizini = Directory.GetCurrentDirectory();
-            string dosyaAdi = "mesafeler.txt";
-            string dosyaYolu = Path.Combine(projeDizini, dosyaAdi);
-            string[] mesafeArray;
+            string projectPath = Directory.GetCurrentDirectory();
+            string fileName = "mesafeler.txt";
+            string FilePath = Path.Combine(projectPath, fileName);
+            string[] distanceArray;
 
             try
             {
-                string file = File.ReadAllText(dosyaYolu);
-                mesafeArray = file.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string file = File.ReadAllText(FilePath);
+                distanceArray = file.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             }
             catch (Exception e)
             {
-                Console.WriteLine("Dosya okunurken bir hata oluştu: " + e.Message);
-                mesafeArray = Array.Empty<string>();
+                Console.WriteLine("an error occurred while reading the file" + e.Message);
+                distanceArray = Array.Empty<string>();
             }
 
             for (int i = 0; i < 81; i++)
             {
-                ilMesafeMatrisi[i] = new double[81];
-                ilMesafeMatrisiSonsuz[i] = new double[81];
+                cityOriginalDistanceJagged[i] = new double[81];
+                cityInfinityDistanceJagged[i] = new double[81];
                 for (int j = 0; j < 81; j++)
                 {
-                    ilMesafeMatrisi[i][j] = double.Parse(mesafeArray[i * 81 + j]);
-                    ilMesafeMatrisiSonsuz[i][j] = double.Parse(mesafeArray[i * 81 + j]);
+                    cityOriginalDistanceJagged[i][j] = double.Parse(distanceArray[i * 81 + j]);
+                    cityInfinityDistanceJagged[i][j] = double.Parse(distanceArray[i * 81 + j]);
                 }
             }
 
 
         }
-        static void RastgeleSehirCifti()
+        static void RandomCityCouple()
         {
             Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                int sehir1 = random.Next(0, 81);
-                int sehir2 = random.Next(0, 81);
-                while (sehir1 == sehir2)
+                int firstCity = random.Next(0, 81);
+                int secondCity = random.Next(0, 81);
+                while (firstCity == secondCity)
                 {
-                    sehir2 = random.Next(0, 81);
+                    secondCity = random.Next(0, 81);
                 }
-                ++sehir1;
-                ++sehir2;
+                ++firstCity;
+                ++secondCity;
 
 
-                Console.WriteLine(sehirAdlari[sehir1] + " (" + sehir1 + ") " + "- " + sehirAdlari[sehir2] + " (" + sehir2 + ") " + "- :" + ilMesafeMatrisi[sehir1 - 1][sehir2 - 1]);
+                Console.WriteLine(cities[firstCity] + " (" + firstCity + ") " + "- " + cities[secondCity] + " (" + secondCity + ") " + "- :" + cityOriginalDistanceJagged[firstCity - 1][secondCity - 1]);
             }
             Console.ReadKey();
         }
         // madde b
-        static void KomsuIllerDısındaSonsuzYap()
+        static void CityInfinity()
         {
-            komsuIller = new Dictionary<int, List<int>>
+            neighborCities = new Dictionary<int, List<int>>
             {
                 { 1, new List<int> { 33, 80, 31, 46, 38, 51 } }, // Adana'nın komşuları (örnek)
                 { 2, new List<int> { 44, 46, 27, 63, 21 } }, //Adıyaman
@@ -193,137 +193,137 @@ namespace proje11
                 { 81, new List<int>  { 67, 14, 54} }, //Düzce
                 
             };
-            int sayac = 0;
+            int counter = 0;
             for (int i = 0; i < 81; i++)
             {
                 for (int j = 0; j < 81; j++)
                 {
                     
-                    if (i != j && (!komsuIller.ContainsKey(i + 1) || !komsuIller[i + 1].Contains(j + 1)))
+                    if (i != j && (!neighborCities.ContainsKey(i + 1) || !neighborCities[i + 1].Contains(j + 1)))
                     {
-                        ilMesafeMatrisiSonsuz[i][j] = Double.PositiveInfinity;
-                        
-                        sayac++;
+                        cityInfinityDistanceJagged[i][j] = Double.PositiveInfinity;
+
+                        counter++;
                     }
                 }
 
 
             }
-            Console.WriteLine(sayac);
+            Console.WriteLine(counter);
         }
 
 
-        public static double Dijkstra(int baslangic, int hedef, double[][] mesafeJaggedArray)
+        public static double Dijkstra(int first, int target, double[][] distanceJagged)
         {
-            int sehirSayisi = 81;
-            double[] mesafeler = new double[sehirSayisi];
-            bool[] ziyaretEdildi = new bool[sehirSayisi];
+            int numOfCity = 81;
+            double[] distance = new double[numOfCity];
+            bool[] isVisited = new bool[numOfCity];
 
-            // Başlangıçtaki tüm mesafeleri sonsuz olarak ayarla.
-            for (int i = 0; i < sehirSayisi; i++)
-                mesafeler[i] = double.PositiveInfinity;
+            //Set all initial distances to infinite
+            for (int i = 0; i < numOfCity; i++)
+                distance[i] = double.PositiveInfinity;
 
-            // Başlangıç şehrinden başla
-            mesafeler[baslangic] = 0;
+            //start from first city
+            distance[first] = 0;
 
             while (true)
             {
-                int enKucukMesafeIndeksi = -1;
-                double enKucukMesafe = double.PositiveInfinity;
+                int minDistanceIndex = -1;
+                double minDistance = double.PositiveInfinity;
 
-                // Henüz ziyaret edilmemiş ve en küçük mesafeye sahip şehri bul
-                for (int i = 0; i < sehirSayisi; i++)
+                // This is the city that has not yet been visited and has the smallest distance
+                for (int i = 0; i < numOfCity; i++)
                 {
-                    if (!ziyaretEdildi[i] && mesafeler[i] < enKucukMesafe)
+                    if (!isVisited[i] && distance[i] < minDistance)
                     {
-                        enKucukMesafe = mesafeler[i];
-                        enKucukMesafeIndeksi = i;
+                        minDistance = distance[i];
+                        minDistanceIndex = i;
                     }
                 }
 
                 // Eğer ulaşılamaz veya ziyaret edilecek başka şehir yoksa
-                if (enKucukMesafeIndeksi == -1 || enKucukMesafeIndeksi == hedef)
+                if (minDistanceIndex == -1 || minDistanceIndex == target)
                     break;
 
                 // Şehri ziyaret edilmiş olarak işaretle
-                ziyaretEdildi[enKucukMesafeIndeksi] = true;
+                isVisited[minDistanceIndex] = true;
 
                 // Komşu şehirleri kontrol et ve mesafeleri güncelle
-                for (int j = 0; j < sehirSayisi; j++)
+                for (int j = 0; j < numOfCity; j++)
                 {
-                    if (!ziyaretEdildi[j] && mesafeJaggedArray[enKucukMesafeIndeksi][j] != double.PositiveInfinity)
+                    if (!isVisited[j] && distanceJagged[minDistanceIndex][j] != double.PositiveInfinity)
                     {
-                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + mesafeJaggedArray[enKucukMesafeIndeksi][j];
-                        if (yeniMesafe < mesafeler[j])
+                        double newDistance = distance[minDistanceIndex] + distanceJagged[minDistanceIndex][j];
+                        if (newDistance < distance[j])
                         {
-                            mesafeler[j] = yeniMesafe;
+                            distance[j] = newDistance;
                         }
                     }
                 }
             }
-            return mesafeler[hedef];
+            return distance[target];
         }
 
-        public static List<Tuple<int, int, double>> MesafeHesaplama(double[][] orjinalJagged, double[][] mesafeJagged, string[] sehirAdlari)
+        public static List<Tuple<int, int, double>> CalculateDistance(double[][] originalJagged, double[][] distanceJagged, string[] cities)
         {
 
             
-            var farkListesi = new List<Tuple<int, int, double>>();
-            var hesaplananCiftler = new HashSet<(int, int)>();
+            var difList = new List<Tuple<int, int, double>>();
+            var calculatedCouples = new HashSet<(int, int)>();
 
             for (int i = 0; i < 81; i++)
             {
                 for (int j = 0; j < 81; j++)
                 {
-                    if (mesafeJagged[i][j] == Double.PositiveInfinity && i != j)
+                    if (distanceJagged[i][j] == Double.PositiveInfinity && i != j)
                     {
-                        var sehirCifti = (Math.Min(i, j), Math.Max(i, j));
+                        var cityCouple = (Math.Min(i, j), Math.Max(i, j));
 
                         // Eğer çift daha önce işlendiyse gecsin
-                        if (hesaplananCiftler.Contains(sehirCifti))
+                        if (calculatedCouples.Contains(cityCouple))
                             continue;
 
-                        hesaplananCiftler.Add(sehirCifti);
+                        calculatedCouples.Add(cityCouple);
 
-                        double hesaplananMesafe = Dijkstra(i, j, mesafeJagged); //dijkstra algosuna esit olacak
-                        double orjinalMesafe = orjinalJagged[i][j];
-                        double fark = hesaplananMesafe - orjinalMesafe;
-                        if (fark < 0)
+                        double calculatedDistance = Dijkstra(i, j, distanceJagged); //dijkstra algosuna esit olacak
+                        double originalDistance = originalJagged[i][j];
+                        double difference = calculatedDistance - originalDistance;
+                        if (difference < 0)
                         {
-                            double yeniFark = fark * (-1);
-                            fark = yeniFark;
+                            double newDif = difference * (-1);
+                            difference = newDif;
 
                         }
 
-                        farkListesi.Add(new Tuple<int, int, double>(i, j, fark));
-                        Console.WriteLine(sehirAdlari[i + 1] + " ile " + sehirAdlari[j + 1] + " arasındaki karayolları cetvelindeki uzaklık değeri: " + orjinalMesafe + "\n"
-                        + "Dijkstra algoritması ile hesaplanan değer: " + hesaplananMesafe + "\n"
-                        + "Iki hesap arasındaki mesafe farkı : " + fark);
+                        difList.Add(new Tuple<int, int, double>(i, j, difference));
+                        Console.WriteLine("Distance between  " + cities[i + 1] + " and " + cities[j + 1] + "in the highway chart: " + originalDistance + "\n"
+                        + "Value calculated with Dijkstra algorithm: " + calculatedDistance + "\n"
+                        + "Distance difference between two accounts : " + difference);
                     }
                 }
             }
 
-            return farkListesi;
+            return difList;
         }
 
-        public static void EnKisaYazdir()
+        public static void PrintMinDifference()
         {
-            var farkListesi = MesafeHesaplama(ilMesafeMatrisi, ilMesafeMatrisiSonsuz, sehirAdlari);
-            double minValue = farkListesi.Min(item => item.Item3);
-            double maxValue = farkListesi.Max(item => item.Item3);
-            var minItems = farkListesi.Where(item => item.Item3 == minValue).ToList();
-            var maxItems = farkListesi.Where(item => item.Item3 == maxValue).ToList();
+            var difList = CalculateDistance(cityOriginalDistanceJagged, cityInfinityDistanceJagged, cities);
+            double minValue = difList.Min(item => item.Item3);
+            double maxValue = difList.Max(item => item.Item3);
+            var minItems = difList.Where(item => item.Item3 == minValue).ToList();
+            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList();
 
-            Console.WriteLine("\nEn kısa mesafe farkına sahip şehirler: ");
+            Console.WriteLine("\n Cities with the shortest distance difference ");
             foreach (var item in minItems)
             {
-                Console.WriteLine($"({sehirAdlari[item.Item1 + 1]}, {sehirAdlari[item.Item2 + 1]}, {item.Item3})");
+                Console.WriteLine($"({cities[item.Item1 + 1]}, {cities[item.Item2 + 1]}, {item.Item3})");
             }
 
-            Console.WriteLine("\nEn fazla mesafe farkına sahip şehirler: ");
+            Console.WriteLine("\n Cities with the longest distance difference ");
             foreach (var item in maxItems)
             {
-                Console.WriteLine($"({sehirAdlari[item.Item1 + 1]}, {sehirAdlari[item.Item2 + 1]}, {item.Item3})");
+                Console.WriteLine($"({cities[item.Item1 + 1]}, {cities[item.Item2 + 1]}, {item.Item3})");
 
             }
             Console.ReadKey();
@@ -333,23 +333,23 @@ namespace proje11
         }
 
         // madde d
-        public static void ilceMatris()
+        public static void CountyMatris() //read file and create county matris
         {
-            string projeDizini = Directory.GetCurrentDirectory();
-            string dosyaAdi = "ilceler.txt";
-            string dosyaYolu = Path.Combine(projeDizini, dosyaAdi);
-            string[] ilceMesafeArray;
+            string projectpath = Directory.GetCurrentDirectory();
+            string fileName = "ilceler.txt";
+            string filePath = Path.Combine(projectpath, fileName);
+            string[] countyDistanceArray;
 
             try
             {
-                string file = File.ReadAllText(dosyaYolu);
-                ilceMesafeArray = file.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                string file = File.ReadAllText(filePath);
+                countyDistanceArray = file.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             }
             catch (Exception e)
             {
-                Console.WriteLine("Dosya okunurken bir hata oluştu: " + e.Message);
-                ilceMesafeArray = Array.Empty<string>();
+                Console.WriteLine("An error occurred while reading the file: " + e.Message);
+                countyDistanceArray = Array.Empty<string>();
             }
 
             for (int i = 0; i < 30; i++)
@@ -357,17 +357,17 @@ namespace proje11
 
                 for (int j = 0; j < 30; j++)
                 {
-                    ilceMesafeMatris[i, j] = double.Parse(ilceMesafeArray[i * 30 + j]);
-                    ilceMesafeMatrisSonsuz[i,j] = double.Parse(ilceMesafeArray[i*30 + j]);
+                    countyOriginalDistance[i, j] = double.Parse(countyDistanceArray[i * 30 + j]);
+                    countyInfinityDistance[i,j] = double.Parse(countyDistanceArray[i*30 + j]);
                 }
             }
 
         }
 
-        public static void ilceKomsularSonsuz()
+        public static void countyInfinite()
         {
 
-            komsuIlceler = new Dictionary<int, List<int>>
+            neighborCountries = new Dictionary<int, List<int>>
             {
                 { 1, new List<int> { 23,12,5 } }, // Aliağa
                 { 2, new List<int> { 21,24,15 } }, //Balçova
@@ -405,10 +405,10 @@ namespace proje11
             {
                 for (int j = 0; j < 30; j++)
                 {
-                    if (i != j && (!komsuIlceler.ContainsKey(i + 1) || !komsuIlceler[i + 1].Contains(j + 1)))
+                    if (i != j && (!neighborCountries.ContainsKey(i + 1) || !neighborCountries[i + 1].Contains(j + 1)))
                     {
-                        
-                        ilceMesafeMatrisSonsuz[i, j] = Double.PositiveInfinity;
+
+                        countyInfinityDistance[i, j] = Double.PositiveInfinity;
                         
                     }
                 }
@@ -416,61 +416,59 @@ namespace proje11
             
 
         }
-        public static double IlceDijkstra(int baslangic, int hedef, double[,] ilceMesafeMatrisSonsuz)
+        public static double CountyDijkstra(int first, int target, double[,] countyInfinityDistance)
         {
-            int ilceSayisi = 30;
-            double[] mesafeler = new double[ilceSayisi];
-            bool[] ziyaretEdildi = new bool[ilceSayisi];
+            int numOfCounty = 30;
+            double[] distance = new double[numOfCounty];
+            bool[] isVisited = new bool[numOfCounty];
 
-            // Başlangıçtaki tüm mesafeleri sonsuz olarak ayarla.
-            for (int i = 0; i < ilceSayisi; i++)
-                mesafeler[i] = double.PositiveInfinity;
+            //Set all initial distances to infinite
+            for (int i = 0; i < numOfCounty; i++)
+                distance[i] = double.PositiveInfinity;
 
-            // Başlangıç şehrinden başla
-            mesafeler[baslangic] = 0;
+            //start from first city
+            distance[first] = 0;
 
             while (true)
             {
-                int enKucukMesafeIndeksi = -1;
-                double enKucukMesafe = double.PositiveInfinity;
+                int minDistanceIndex = -1;
+                double minDistance = double.PositiveInfinity;
 
-                // Henüz ziyaret edilmemiş ve en küçük mesafeye sahip ilçeyi bul
-                for (int i = 0; i < ilceSayisi; i++)
+                // This is the city that has not yet been visited and has the smallest distance
+                for (int i = 0; i < numOfCounty; i++)
                 {
-                    if (!ziyaretEdildi[i] && mesafeler[i] < enKucukMesafe)
+                    if (!isVisited[i] && distance[i] < minDistance)
                     {
-                        enKucukMesafe = mesafeler[i];
-                        enKucukMesafeIndeksi = i;
+                        minDistance = distance[i];
+                        minDistanceIndex = i;
                     }
                 }
 
-                // Eğer ulaşılamaz veya ziyaret edilecek başka şehir yoksa
-                if (enKucukMesafeIndeksi == -1 || enKucukMesafeIndeksi == hedef)
+                
+                if (minDistanceIndex == -1 || minDistanceIndex == target)
                     break;
 
-                // Şehri ziyaret edilmiş olarak işaretle
-                ziyaretEdildi[enKucukMesafeIndeksi] = true;
+                isVisited[minDistanceIndex] = true;
 
-                // Komşu şehirleri kontrol et ve mesafeleri güncelle
-                for (int j = 0; j < ilceSayisi; j++)
+                for (int j = 0; j < numOfCounty; j++)
                 {
-                    if (!ziyaretEdildi[j] && ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi, j] != double.PositiveInfinity)
+                    if (!isVisited[j] && countyInfinityDistance[minDistanceIndex, j] != double.PositiveInfinity)
                     {
-                        double yeniMesafe = mesafeler[enKucukMesafeIndeksi] + ilceMesafeMatrisSonsuz[enKucukMesafeIndeksi, j];
-                        if (yeniMesafe < mesafeler[j])
+                        double newDistance = distance[minDistanceIndex] + countyInfinityDistance[minDistanceIndex, j];
+                        if (newDistance < distance[j])
                         {
-                            mesafeler[j] = yeniMesafe;
+                            distance[j] = newDistance;
                         }
                     }
                 }
             }
-            return mesafeler[hedef];
+            return distance[target];
         }
 
-        public static List<Tuple<int, int, double>> MesafeHesaplamaIlce(double[,] orjinalMatris, double[,] matris, string[] İlceAdlari)
+        public static List<Tuple<int, int, double>> CalculateDistCounty(double[,] orjinalMatris, double[,] matris, string[] İlceAdlari)
         {
-            var farkListesiIlce = new List<Tuple<int, int, double>>();
-            var hesaplananCiftlerIlce = new HashSet<(int, int)>();
+            var difList = new List<Tuple<int, int, double>>();
+            var calculatedCouples = new HashSet<(int, int)>();
 
             for (int i = 0; i < 30; i++)
             {
@@ -478,53 +476,53 @@ namespace proje11
                 {
                     if (matris[i, j] == Double.PositiveInfinity && i != j)
                     {
-                        var ilceCifti = (Math.Min(i, j), Math.Max(i, j));
+                        var couples = (Math.Min(i, j), Math.Max(i, j));
 
-                        if (hesaplananCiftlerIlce.Contains(ilceCifti))
+                        if (calculatedCouples.Contains(couples))
                             continue;
 
-                        hesaplananCiftlerIlce.Add(ilceCifti);
+                        calculatedCouples.Add(couples);
 
-                        double hesaplananMesafe = IlceDijkstra(i, j, matris); //dijkstra algosuna esit olacak
-                        double orjinalMesafe = orjinalMatris[i, j];
-                        double fark = hesaplananMesafe - orjinalMesafe;
-                        if (fark < 0)
+                        double calculatedDistance = CountyDijkstra(i, j, matris); //dijkstra algosuna esit olacak
+                        double originalDistance = orjinalMatris[i, j];
+                        double difference = calculatedDistance - originalDistance;
+                        if (difference < 0)
                         {
-                            double yeniFark = fark * (-1);
-                            fark = yeniFark;
-
+                            double newDif = difference * (-1);
+                            difference = newDif;
                         }
 
 
-                        farkListesiIlce.Add(new Tuple<int, int, double>(i, j, fark));
-                        Console.WriteLine(ilceAdlari[i] + " ile " + ilceAdlari[j] + " arasındaki karayolları cetvelindeki uzaklık değeri: " + orjinalMesafe + "\n"
-                        + "Dijkstra algoritması ile hesaplanan değer: " + hesaplananMesafe + "\n"
-                        + "Iki hesap arasındaki mesafe farkı : " + fark);
+                        difList.Add(new Tuple<int, int, double>(i, j, difference));
+                        Console.WriteLine("Distance between  " + countyNames[1] + " and " + countyNames[1] + "in the highway chart: " + originalDistance + "\n"
+                        + "Value calculated with Dijkstra algorithm: " + calculatedDistance + "\n"
+                        + "Distance difference between two accounts : " + difference);
                     }
                 }
+                
             }
 
-            return farkListesiIlce;
+            return difList;
         }
 
-        public static void EnKisaYazdirIlce()
+        public static void MinDifCunty()
         {
-            var farkListesiIlce = MesafeHesaplamaIlce(ilceMesafeMatris, ilceMesafeMatrisSonsuz, ilceAdlari);
-            double minValue = farkListesiIlce.Min(item => item.Item3);
-            double maxValue = farkListesiIlce.Max(item => item.Item3);
-            var minItems = farkListesiIlce.Where(item => item.Item3 == minValue).ToList();
-            var maxItems = farkListesiIlce.Where(item => item.Item3 == maxValue).ToList();
+            var difList = CalculateDistCounty(countyOriginalDistance, countyInfinityDistance, countyNames);
+            double minValue = difList.Min(item => item.Item3);
+            double maxValue = difList.Max(item => item.Item3);
+            var minItems = difList.Where(item => item.Item3 == minValue).ToList();
+            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList();
 
-            Console.WriteLine("\nEn kısa mesafe farkına sahip ilçeler: ");
+            Console.WriteLine("\n Counties with the shortest distance difference ");
             foreach (var item in minItems)
             {
-                Console.WriteLine($"({ilceAdlari[item.Item1]}, {ilceAdlari[item.Item2]}, {item.Item3})");
+                Console.WriteLine($"({countyNames[item.Item1]}, {countyNames[item.Item2]}, {item.Item3})");
             }
 
-            Console.WriteLine("\nEn fazla mesafe farkına sahip ilçeler: ");
+            Console.WriteLine("\n Counties with the longest distance difference ");
             foreach (var item in maxItems)
             {
-                Console.WriteLine($"({ilceAdlari[item.Item1]}, {ilceAdlari[item.Item2]}, {item.Item3})");
+                Console.WriteLine($"({countyNames[item.Item1 + 1]}, {countyNames[item.Item2 + 1]}, {item.Item3})");
 
             }
             Console.ReadKey();
