@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +11,6 @@ namespace proje11
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             MakeCityDistanceJagged();
@@ -23,11 +21,8 @@ namespace proje11
             countyInfinite();
             MinDifCunty();
             
-
         }
-
-
-        static string[] cities = {
+        static string[] cities = { //city names array
                 " " , "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya",
                 "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik",
                 "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale",
@@ -45,25 +40,23 @@ namespace proje11
                 "Kilis" , "Osmaniye" , "Düzce"
             };
         static string[] countyNames = { "Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla" };
-        static double[][] cityOriginalDistanceJagged = new double[81][]; //cetveldeki veriler kalacak
-        static double[][] cityInfinityDistanceJagged = new double[81][]; //sonsuz değerler olarak
-        static Dictionary<int, List<int>> neighborCities = new Dictionary<int, List<int>>();
-        static double[,] countyOriginalDistance = new double[30, 30];
-        static double[,] countyInfinityDistance = new double[30, 30];
-        static Dictionary<int, List<int>> neighborCountries = new Dictionary<int, List<int>>();
+        static double[][] cityOriginalDistanceJagged = new double[81][]; //for original values
+        static double[][] cityInfinityDistanceJagged = new double[81][]; //for infinite values
+        static Dictionary<int, List<int>> neighborCities = new Dictionary<int, List<int>>(); //dict for neighbor cities
+        static double[,] countyOriginalDistance = new double[30, 30]; //for original values
+        static double[,] countyInfinityDistance = new double[30, 30]; //for infinite values
+        static Dictionary<int, List<int>> neighborCounties = new Dictionary<int, List<int>>(); //dict for neighbor counties
 
         // madde a
-        static void MakeCityDistanceJagged()
+        static void MakeCityDistanceJagged() 
         {
-
-            string projectPath = Directory.GetCurrentDirectory();
+            string projectPath = Directory.GetCurrentDirectory(); //get project path for dinamic file path
             string fileName = "mesafeler.txt";
-            string FilePath = Path.Combine(projectPath, fileName);
+            string FilePath = Path.Combine(projectPath, fileName); 
             string[] distanceArray;
-
             try
             {
-                string file = File.ReadAllText(FilePath);
+                string file = File.ReadAllText(FilePath); //read file
                 distanceArray = file.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             }
@@ -73,7 +66,7 @@ namespace proje11
                 distanceArray = Array.Empty<string>();
             }
 
-            for (int i = 0; i < 81; i++)
+            for (int i = 0; i < 81; i++) //create jagged array
             {
                 cityOriginalDistanceJagged[i] = new double[81];
                 cityInfinityDistanceJagged[i] = new double[81];
@@ -81,12 +74,11 @@ namespace proje11
                 {
                     cityOriginalDistanceJagged[i][j] = double.Parse(distanceArray[i * 81 + j]);
                     cityInfinityDistanceJagged[i][j] = double.Parse(distanceArray[i * 81 + j]);
+
                 }
             }
-
-
         }
-        static void RandomCityCouple()
+        static void RandomCityCouple() 
         {
             Random random = new Random();
             for (int i = 0; i < 10; i++)
@@ -99,18 +91,17 @@ namespace proje11
                 }
                 ++firstCity;
                 ++secondCity;
-
-
-                Console.WriteLine(cities[firstCity] + " (" + firstCity + ") " + "- " + cities[secondCity] + " (" + secondCity + ") " + "- :" + cityOriginalDistanceJagged[firstCity - 1][secondCity - 1]);
+                Console.WriteLine(cities[firstCity] + " (" + firstCity + ") " + "- " + cities[secondCity] + 
+                    " (" + secondCity + ") " + " :" + cityOriginalDistanceJagged[firstCity - 1][secondCity - 1]);
             }
             Console.ReadKey();
         }
         // madde b
         static void CityInfinity()
         {
-            neighborCities = new Dictionary<int, List<int>>
+            neighborCities = new Dictionary<int, List<int>> //dictionary for neighbor cities 
             {
-                { 1, new List<int> { 33, 80, 31, 46, 38, 51 } }, // Adana'nın komşuları (örnek)
+                { 1, new List<int> { 33, 80, 31, 46, 38, 51 } }, // Adana
                 { 2, new List<int> { 44, 46, 27, 63, 21 } }, //Adıyaman
                 { 3, new List<int> { 64, 20, 15, 32, 42, 26, 43 } }, //Afyonkarahisar
                 { 4, new List<int> { 76, 36, 25, 49, 13, 65} }, //Ağrı
@@ -190,29 +181,23 @@ namespace proje11
                 { 78, new List<int>  { 74, 67, 37, 18, 14} }, //Karabük
                 { 79, new List<int>  { 27, 31} }, //Kilis
                 { 80, new List<int>  {01, 31, 46, 27} }, //Osmaniye
-                { 81, new List<int>  { 67, 14, 54} }, //Düzce
-                
+                { 81, new List<int>  { 67, 14, 54} }, //Düzce    
             };
             int counter = 0;
             for (int i = 0; i < 81; i++)
             {
                 for (int j = 0; j < 81; j++)
-                {
-                    
+                {   
                     if (i != j && (!neighborCities.ContainsKey(i + 1) || !neighborCities[i + 1].Contains(j + 1)))
                     {
                         cityInfinityDistanceJagged[i][j] = Double.PositiveInfinity;
-
                         counter++;
                     }
                 }
-
-
-            }
-            Console.WriteLine(counter);
+            }            
         }
 
-
+        //madde c
         public static double Dijkstra(int first, int target, double[][] distanceJagged)
         {
             int numOfCity = 81;
@@ -241,14 +226,14 @@ namespace proje11
                     }
                 }
 
-                // Eğer ulaşılamaz veya ziyaret edilecek başka şehir yoksa
+                // If it is unreachable or there are no other cities to visit
                 if (minDistanceIndex == -1 || minDistanceIndex == target)
                     break;
 
-                // Şehri ziyaret edilmiş olarak işaretle
+                // Mark the city as visited
                 isVisited[minDistanceIndex] = true;
 
-                // Komşu şehirleri kontrol et ve mesafeleri güncelle
+                // Check neighboring cities and update distances
                 for (int j = 0; j < numOfCity; j++)
                 {
                     if (!isVisited[j] && distanceJagged[minDistanceIndex][j] != double.PositiveInfinity)
@@ -266,8 +251,6 @@ namespace proje11
 
         public static List<Tuple<int, int, double>> CalculateDistance(double[][] originalJagged, double[][] distanceJagged, string[] cities)
         {
-
-            
             var difList = new List<Tuple<int, int, double>>();
             var calculatedCouples = new HashSet<(int, int)>();
 
@@ -277,42 +260,41 @@ namespace proje11
                 {
                     if (distanceJagged[i][j] == Double.PositiveInfinity && i != j)
                     {
-                        var cityCouple = (Math.Min(i, j), Math.Max(i, j));
+                        var cityCouple = (Math.Min(i, j), Math.Max(i, j)); 
 
-                        // Eğer çift daha önce işlendiyse gecsin
+                        //Continue if the pair has already been saved
                         if (calculatedCouples.Contains(cityCouple))
                             continue;
 
                         calculatedCouples.Add(cityCouple);
 
-                        double calculatedDistance = Dijkstra(i, j, distanceJagged); //dijkstra algosuna esit olacak
-                        double originalDistance = originalJagged[i][j];
+                        double calculatedDistance = Dijkstra(i, j, distanceJagged); //it is equal to dijkstra's result
+                        double originalDistance = originalJagged[i][j]; //equal to original distance
                         double difference = calculatedDistance - originalDistance;
-                        if (difference < 0)
+
+                        if (difference < 0) //turning negative distance into positive
                         {
                             double newDif = difference * (-1);
                             difference = newDif;
-
                         }
 
                         difList.Add(new Tuple<int, int, double>(i, j, difference));
-                        Console.WriteLine("Distance between  " + cities[i + 1] + " and " + cities[j + 1] + "in the highway chart: " + originalDistance + "\n"
-                        + "Value calculated with Dijkstra algorithm: " + calculatedDistance + "\n"
-                        + "Distance difference between two accounts : " + difference);
+                        Console.WriteLine("Distance between  " + cities[i + 1] + " and " + cities[j + 1] + " in the highway chart: " + originalDistance + "\n"
+                        + " Value calculated with Dijkstra algorithm: " + calculatedDistance + "\n"
+                        + " Distance difference between two accounts : " + difference);
                     }
                 }
             }
-
             return difList;
         }
 
         public static void PrintMinDifference()
         {
             var difList = CalculateDistance(cityOriginalDistanceJagged, cityInfinityDistanceJagged, cities);
-            double minValue = difList.Min(item => item.Item3);
-            double maxValue = difList.Max(item => item.Item3);
-            var minItems = difList.Where(item => item.Item3 == minValue).ToList();
-            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList();
+            double minValue = difList.Min(item => item.Item3); 
+            double maxValue = difList.Max(item => item.Item3); 
+            var minItems = difList.Where(item => item.Item3 == minValue).ToList();//cities with minimum difference
+            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList();//cities witf maximum differnce
 
             Console.WriteLine("\n Cities with the shortest distance difference ");
             foreach (var item in minItems)
@@ -327,13 +309,10 @@ namespace proje11
 
             }
             Console.ReadKey();
-
-
-
         }
 
         // madde d
-        public static void CountyMatris() //read file and create county matris
+        public static void CountyMatris() //read file and create county distance matris
         {
             string projectpath = Directory.GetCurrentDirectory();
             string fileName = "ilceler.txt";
@@ -357,17 +336,16 @@ namespace proje11
 
                 for (int j = 0; j < 30; j++)
                 {
-                    countyOriginalDistance[i, j] = double.Parse(countyDistanceArray[i * 30 + j]);
-                    countyInfinityDistance[i,j] = double.Parse(countyDistanceArray[i*30 + j]);
+                    countyOriginalDistance[i, j] = double.Parse(countyDistanceArray[i * 30 + j]); //for original values
+                    countyInfinityDistance[i,j] = double.Parse(countyDistanceArray[i*30 + j]); //for infinite values
                 }
             }
 
         }
 
-        public static void countyInfinite()
+        public static void countyInfinite() 
         {
-
-            neighborCountries = new Dictionary<int, List<int>>
+            neighborCounties = new Dictionary<int, List<int>> //dict for neighbor counties
             {
                 { 1, new List<int> { 23,12,5 } }, // Aliağa
                 { 2, new List<int> { 21,24,15 } }, //Balçova
@@ -401,22 +379,21 @@ namespace proje11
                 { 30, new List<int> { 14,16,9,26} }//urla
             };
            
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 30; i++) 
             {
                 for (int j = 0; j < 30; j++)
                 {
-                    if (i != j && (!neighborCountries.ContainsKey(i + 1) || !neighborCountries[i + 1].Contains(j + 1)))
+                    if (i != j && (!neighborCounties.ContainsKey(i + 1) || !neighborCounties[i + 1].Contains(j + 1)))
                     {
 
-                        countyInfinityDistance[i, j] = Double.PositiveInfinity;
+                        countyInfinityDistance[i, j] = Double.PositiveInfinity; //make infinite value
                         
                     }
                 }
             }
-            
 
         }
-        public static double CountyDijkstra(int first, int target, double[,] countyInfinityDistance)
+        public static double CountyDijkstra(int first, int target, double[,] countyInfinityDistance) //dijkstra algorithm for counties
         {
             int numOfCounty = 30;
             double[] distance = new double[numOfCounty];
@@ -442,9 +419,7 @@ namespace proje11
                         minDistance = distance[i];
                         minDistanceIndex = i;
                     }
-                }
-
-                
+                }      
                 if (minDistanceIndex == -1 || minDistanceIndex == target)
                     break;
 
@@ -465,7 +440,7 @@ namespace proje11
             return distance[target];
         }
 
-        public static List<Tuple<int, int, double>> CalculateDistCounty(double[,] orjinalMatris, double[,] matris, string[] İlceAdlari)
+        public static List<Tuple<int, int, double>> CalculateDistCounty(double[,] orjinalMatris, double[,] matris, string[] counties)
         {
             var difList = new List<Tuple<int, int, double>>();
             var calculatedCouples = new HashSet<(int, int)>();
@@ -478,23 +453,21 @@ namespace proje11
                     {
                         var couples = (Math.Min(i, j), Math.Max(i, j));
 
-                        if (calculatedCouples.Contains(couples))
+                        if (calculatedCouples.Contains(couples)) 
                             continue;
 
                         calculatedCouples.Add(couples);
 
-                        double calculatedDistance = CountyDijkstra(i, j, matris); //dijkstra algosuna esit olacak
-                        double originalDistance = orjinalMatris[i, j];
+                        double calculatedDistance = CountyDijkstra(i, j, matris); //equal to dijkstra's result
+                        double originalDistance = orjinalMatris[i, j]; //equal to highway chart's value
                         double difference = calculatedDistance - originalDistance;
                         if (difference < 0)
                         {
                             double newDif = difference * (-1);
                             difference = newDif;
                         }
-
-
                         difList.Add(new Tuple<int, int, double>(i, j, difference));
-                        Console.WriteLine("Distance between  " + countyNames[1] + " and " + countyNames[1] + "in the highway chart: " + originalDistance + "\n"
+                        Console.WriteLine("Distance between  " + counties[i] + " and " + counties[j] + " in the highway chart: " + originalDistance + "\n"
                         + "Value calculated with Dijkstra algorithm: " + calculatedDistance + "\n"
                         + "Distance difference between two accounts : " + difference);
                     }
@@ -510,8 +483,8 @@ namespace proje11
             var difList = CalculateDistCounty(countyOriginalDistance, countyInfinityDistance, countyNames);
             double minValue = difList.Min(item => item.Item3);
             double maxValue = difList.Max(item => item.Item3);
-            var minItems = difList.Where(item => item.Item3 == minValue).ToList();
-            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList();
+            var minItems = difList.Where(item => item.Item3 == minValue).ToList(); //counties with minimum difference
+            var maxItems = difList.Where(item => item.Item3 == maxValue).ToList(); //counties with max difference
 
             Console.WriteLine("\n Counties with the shortest distance difference ");
             foreach (var item in minItems)
@@ -530,7 +503,3 @@ namespace proje11
         }
     }
 }
-
-
-
-
